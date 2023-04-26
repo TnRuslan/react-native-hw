@@ -1,4 +1,5 @@
 import { useState } from "react";
+import * as ImagePicker from "expo-image-picker";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -8,8 +9,10 @@ import {
   Text,
   Keyboard,
   TouchableWithoutFeedback,
+  TouchableOpacity,
+  Image,
 } from "react-native";
-import { Button } from "../assets/components/Button";
+import { StyledButton } from "../assets/components/Button";
 
 export const RegistrationScreen = () => {
   const [login, setLogin] = useState();
@@ -28,10 +31,28 @@ export const RegistrationScreen = () => {
     setPassword("");
   };
 
+  const pickImageAsync = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      quality: 1,
+    });
+    console.log("image");
+    if (!result.canceled) {
+      console.log(result);
+    } else {
+      alert("You did not select any image.");
+    }
+  };
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
-        <View style={styles.avatarWrp}></View>
+        <View style={styles.avatarWrp}>
+          <TouchableOpacity
+            style={styles.avatarBtn}
+            onPress={pickImageAsync}
+          ></TouchableOpacity>
+        </View>
         <Text style={styles.header}>Registration</Text>
         <KeyboardAvoidingView
           behavior={Platform.OS == "ios" ? "padding" : "height"}
@@ -58,7 +79,7 @@ export const RegistrationScreen = () => {
               onChangeText={passwordHandler}
             />
           </View>
-          <Button value={"Sign up"} onPressFnc={onSubmit}></Button>
+          <StyledButton value={"Sign up"} onPressFnc={onSubmit}></StyledButton>
           <Text style={styles.link}>
             Do you already have an account? Sign in
           </Text>
@@ -83,9 +104,6 @@ const styles = StyleSheet.create({
   },
   avatarWrp: {
     position: "absolute",
-    // flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
     top: -60,
     left: "50%",
     transform: "translateX(-40px)",
@@ -93,6 +111,15 @@ const styles = StyleSheet.create({
     height: 120,
     backgroundColor: "#f6f6f6",
     borderRadius: 16,
+  },
+  avatarBtn: {
+    height: "100%",
+    borderRadius: 16,
+    backgroundColor: "transparent",
+  },
+  AaddBtn: {
+    width: 20,
+    height: 20,
   },
   header: {
     textAlign: "center",

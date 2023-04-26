@@ -1,5 +1,5 @@
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
-export const Button = ({ value, onPressFnc }) => {
+export const StyledButton = ({ value, onPressFnc }) => {
   return (
     <TouchableOpacity
       activeOpacity={0.8}
