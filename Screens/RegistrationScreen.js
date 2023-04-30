@@ -12,6 +12,12 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
+import { AntDesign } from "@expo/vector-icons";
+import {
+  useFonts,
+  Roboto_400Regular,
+  Roboto_500Medium,
+} from "@expo-google-fonts/roboto";
 import { StyledButton } from "../assets/components/Button";
 
 export const RegistrationScreen = () => {
@@ -22,6 +28,14 @@ export const RegistrationScreen = () => {
   const loginHandler = (text) => setLogin(text);
   const emailHandler = (text) => setEmail(text);
   const passwordHandler = (text) => setPassword(text);
+  let [fontsLoaded] = useFonts({
+    Roboto_400Regular,
+    Roboto_500Medium,
+  });
+
+  if (!fontsLoaded) {
+    return null;
+  }
 
   const onSubmit = () => {
     Keyboard.dismiss();
@@ -36,7 +50,6 @@ export const RegistrationScreen = () => {
       allowsEditing: true,
       quality: 1,
     });
-    console.log("image");
     if (!result.canceled) {
       console.log(result);
     } else {
@@ -52,6 +65,12 @@ export const RegistrationScreen = () => {
             style={styles.avatarBtn}
             onPress={pickImageAsync}
           ></TouchableOpacity>
+          <AntDesign
+            style={styles.addIcon}
+            name="pluscircleo"
+            size={20}
+            color="#FF6C00"
+          />
         </View>
         <Text style={styles.header}>Registration</Text>
         <KeyboardAvoidingView
@@ -117,17 +136,17 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     backgroundColor: "transparent",
   },
-  AaddBtn: {
-    width: 20,
-    height: 20,
+  addIcon: {
+    position: "absolute",
+    right: -10,
+    bottom: 14,
   },
   header: {
     textAlign: "center",
     marginBottom: 33,
     marginTop: 92,
-
+    fontFamily: "Roboto_500Medium",
     fontSize: 30,
-    fontWeight: 500,
   },
   inputWrapper: {
     gap: 16,
@@ -140,11 +159,13 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: "#F6F6F6",
     color: "#BDBDBD",
+    fontFamily: "Roboto_400Regular",
   },
   link: {
     marginBottom: 32,
     textAlign: "center",
     fontSize: 16,
     color: "#1B4371",
+    fontFamily: "Roboto_400Regular",
   },
 });

@@ -8,6 +8,11 @@ import {
   Text,
   Keyboard,
 } from "react-native";
+import {
+  useFonts,
+  Roboto_400Regular,
+  Roboto_500Medium,
+} from "@expo-google-fonts/roboto";
 import { Button } from "../assets/components/Button";
 
 export const LoginScreen = () => {
@@ -23,6 +28,15 @@ export const LoginScreen = () => {
     setEmail("");
     setPassword("");
   };
+
+  let [fontsLoaded] = useFonts({
+    Roboto_400Regular,
+    Roboto_500Medium,
+  });
+
+  if (!fontsLoaded) {
+    return null;
+  }
 
   return (
     <View style={styles.container}>
@@ -66,9 +80,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 33,
     marginTop: 32,
-
+    fontFamily: "Roboto_500Medium",
     fontSize: 30,
-    fontWeight: 500,
   },
   inputWrapper: {
     gap: 16,
@@ -82,11 +95,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#F6F6F6",
     color: "#212121",
     fontSize: 16,
+    fontFamily: "Roboto_400Regular",
   },
   link: {
     marginBottom: 32,
     textAlign: "center",
     fontSize: 16,
     color: "#1B4371",
+    fontFamily: "Roboto_400Regular",
   },
 });
