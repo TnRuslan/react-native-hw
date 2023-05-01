@@ -13,9 +13,9 @@ import {
   Roboto_400Regular,
   Roboto_500Medium,
 } from "@expo-google-fonts/roboto";
-import { Button } from "../assets/components/Button";
+import { StyledButton } from "../assets/components/Button";
 
-export const LoginScreen = () => {
+export const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
 
@@ -27,6 +27,7 @@ export const LoginScreen = () => {
     console.log(`email: ${email} ; password: ${password}`);
     setEmail("");
     setPassword("");
+    navigation.navigate("Home");
   };
 
   let [fontsLoaded] = useFonts({
@@ -60,8 +61,14 @@ export const LoginScreen = () => {
             onChangeText={passwordHandler}
           />
         </View>
-        <Button value={"Sign in"} onPressFnc={onSubmit}></Button>
-        <Text style={styles.link}>don't have an account? Sign up</Text>
+        <StyledButton value={"Sign in"} onPressFnc={onSubmit}></StyledButton>
+
+        <Text
+          onPress={() => navigation.navigate("Registration")}
+          style={styles.link}
+        >
+          don't have an account? Sign up
+        </Text>
       </KeyboardAvoidingView>
     </View>
   );

@@ -10,7 +10,7 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   TouchableOpacity,
-  Image,
+  ImageBackground,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import {
@@ -20,7 +20,7 @@ import {
 } from "@expo-google-fonts/roboto";
 import { StyledButton } from "../assets/components/Button";
 
-export const RegistrationScreen = () => {
+export const RegistrationScreen = ({ navigation }) => {
   const [login, setLogin] = useState();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
@@ -43,6 +43,7 @@ export const RegistrationScreen = () => {
     setLogin("");
     setEmail("");
     setPassword("");
+    navigation.navigate("Home");
   };
 
   const pickImageAsync = async () => {
@@ -58,53 +59,65 @@ export const RegistrationScreen = () => {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={styles.container}>
-        <View style={styles.avatarWrp}>
-          <TouchableOpacity
-            style={styles.avatarBtn}
-            onPress={pickImageAsync}
-          ></TouchableOpacity>
-          <AntDesign
-            style={styles.addIcon}
-            name="pluscircleo"
-            size={20}
-            color="#FF6C00"
-          />
-        </View>
-        <Text style={styles.header}>Registration</Text>
-        <KeyboardAvoidingView
-          behavior={Platform.OS == "ios" ? "padding" : "height"}
-        >
-          <View style={styles.inputWrapper}>
-            <TextInput
-              style={styles.input}
-              placeholder="login"
-              value={login}
-              onChangeText={loginHandler}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="email"
-              value={email}
-              onChangeText={emailHandler}
-            />
-            <TextInput
-              textContentType="password"
-              secureTextEntry={true}
-              style={styles.input}
-              placeholder="password"
-              value={password}
-              onChangeText={passwordHandler}
+    <ImageBackground
+      style={styles.bgImage}
+      source={require("../assets/bg-mountains.jpg")}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={styles.container}>
+          <View style={styles.avatarWrp}>
+            <TouchableOpacity
+              style={styles.avatarBtn}
+              onPress={pickImageAsync}
+            ></TouchableOpacity>
+            <AntDesign
+              style={styles.addIcon}
+              name="pluscircleo"
+              size={20}
+              color="#FF6C00"
             />
           </View>
-          <StyledButton value={"Sign up"} onPressFnc={onSubmit}></StyledButton>
-          <Text style={styles.link}>
-            Do you already have an account? Sign in
-          </Text>
-        </KeyboardAvoidingView>
-      </View>
-    </TouchableWithoutFeedback>
+          <Text style={styles.header}>Registration</Text>
+          <KeyboardAvoidingView
+            behavior={Platform.OS == "ios" ? "padding" : "height"}
+          >
+            <View style={styles.inputWrapper}>
+              <TextInput
+                style={styles.input}
+                placeholder="login"
+                value={login}
+                onChangeText={loginHandler}
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="email"
+                value={email}
+                onChangeText={emailHandler}
+              />
+              <TextInput
+                textContentType="password"
+                secureTextEntry={true}
+                style={styles.input}
+                placeholder="password"
+                value={password}
+                onChangeText={passwordHandler}
+              />
+            </View>
+            <StyledButton
+              value={"Sign up"}
+              onPressFnc={onSubmit}
+            ></StyledButton>
+
+            <Text
+              onPress={() => navigation.navigate("Login")}
+              style={styles.link}
+            >
+              Do you already have an account? Sign in
+            </Text>
+          </KeyboardAvoidingView>
+        </View>
+      </TouchableWithoutFeedback>
+    </ImageBackground>
   );
 };
 
@@ -120,6 +133,10 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     paddingHorizontal: 16,
+  },
+  bgImage: {
+    flex: 1,
+    resizeMode: "cover",
   },
   avatarWrp: {
     position: "absolute",

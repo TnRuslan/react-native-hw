@@ -1,39 +1,45 @@
-import {
-  ImageBackground,
-  StyleSheet,
-  Keyboard,
-  TouchableWithoutFeedback,
-  View,
-} from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+// import { useRoute } from "./router";
+
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+// icon imports
 import { RegistrationScreen } from "./Screens/RegistrationScreen";
 import { LoginScreen } from "./Screens/LoginScreen";
+import { Home } from "./Screens/Home";
+
+const Stack = createNativeStackNavigator();
+
+// export default function App() {
+//   const routing = useRoute(true);
+//   return <NavigationContainer>{routing}</NavigationContainer>;
+// }
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <ImageBackground
-          style={styles.bgImage}
-          source={require("./assets/bg-mountains.jpg")}
-        >
-          <RegistrationScreen></RegistrationScreen>
-          {/* <LoginScreen></LoginScreen> */}
-        </ImageBackground>
-      </TouchableWithoutFeedback>
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          options={{
+            headerShown: false,
+          }}
+          name="Registration"
+          component={RegistrationScreen}
+        />
+        <Stack.Screen
+          options={{
+            headerShown: false,
+          }}
+          name="Login"
+          component={LoginScreen}
+        />
+        <Stack.Screen
+          options={{
+            headerShown: false,
+          }}
+          name="Home"
+          component={Home}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-  bgImage: {
-    flex: 1,
-    resizeMode: "cover",
-    // justifyContent: "center",
-    // position: "absolute",
-    // alignItems: "center",
-  },
-});
