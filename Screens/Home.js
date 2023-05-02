@@ -6,6 +6,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 
+import { DefaulScreen } from "./mainScreen/DefaultSceen";
 import { PostsScreen } from "./mainScreen/PostsScreen";
 import { ProfileScreen } from "./mainScreen/ProfileScreen";
 import { CreatePostsScreen } from "./mainScreen/CreatePostsScreen";
@@ -21,15 +22,15 @@ export const Home = () => {
           width: 10,
         },
         tabBarStyle: {
-          position: "absolute",
+          // position: "absolute",
           height: 83,
         },
         tabBarActiveBackgroundColor: "#FF6C00",
       }}
     >
       <Tab.Screen
-        name="Posts"
-        component={PostsScreen}
+        name="Default"
+        component={DefaulScreen}
         options={{
           tabBarIcon: ({ focused, color, size }) => {
             if (focused) {
@@ -50,6 +51,7 @@ export const Home = () => {
             }
             return <AntDesign name="plus" size={size} color={color} />;
           },
+          headerShown: false,
         }}
       />
       <Tab.Screen

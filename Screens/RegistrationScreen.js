@@ -21,6 +21,7 @@ import {
 import { StyledButton } from "../assets/components/Button";
 
 export const RegistrationScreen = ({ navigation }) => {
+  const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [login, setLogin] = useState();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
@@ -87,12 +88,16 @@ export const RegistrationScreen = ({ navigation }) => {
                 placeholder="login"
                 value={login}
                 onChangeText={loginHandler}
+                onFocus={() => setIsShowKeyboard(true)}
+                onBlur={() => setIsShowKeyboard(false)}
               />
               <TextInput
                 style={styles.input}
                 placeholder="email"
                 value={email}
                 onChangeText={emailHandler}
+                onFocus={() => setIsShowKeyboard(true)}
+                onBlur={() => setIsShowKeyboard(false)}
               />
               <TextInput
                 textContentType="password"
@@ -101,20 +106,19 @@ export const RegistrationScreen = ({ navigation }) => {
                 placeholder="password"
                 value={password}
                 onChangeText={passwordHandler}
+                onFocus={() => setIsShowKeyboard(true)}
+                onBlur={() => setIsShowKeyboard(false)}
               />
             </View>
-            <StyledButton
-              value={"Sign up"}
-              onPressFnc={onSubmit}
-            ></StyledButton>
-
-            <Text
-              onPress={() => navigation.navigate("Login")}
-              style={styles.link}
-            >
-              Do you already have an account? Sign in
-            </Text>
           </KeyboardAvoidingView>
+          <StyledButton value={"Sign up"} onPressFnc={onSubmit}></StyledButton>
+
+          <Text
+            onPress={() => navigation.navigate("Login")}
+            style={{ ...styles.link, marginBottom: isShowKeyboard ? -100 : 32 }}
+          >
+            Do you already have an account? Sign in
+          </Text>
         </View>
       </TouchableWithoutFeedback>
     </ImageBackground>
@@ -126,8 +130,9 @@ const styles = StyleSheet.create({
     position: "relative",
     // height: 400,
     marginTop: "auto",
+    // marginBottom: 0,
     // flex: 1,
-    justifyContent: "center",
+    justifyContent: "flex-end",
     // alignItems: "center",
     backgroundColor: "#fff",
     borderTopLeftRadius: 25,
