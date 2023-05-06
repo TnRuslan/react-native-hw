@@ -10,6 +10,8 @@ import { LoginScreen } from "./Screens/LoginScreen";
 import { PostsScreen } from "./Screens/mainScreen/PostsScreen";
 import { ProfileScreen } from "./Screens/mainScreen/ProfileScreen";
 import { CreatePostsScreen } from "./Screens/mainScreen/CreatePostsScreen";
+import { Home } from "./Screens/Home";
+import { DefaulScreen } from "./Screens/mainScreen/DefaultSceen";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -22,6 +24,13 @@ export const useRoute = (isAuth) => {
           options={{
             headerShown: false,
           }}
+          name="Login"
+          component={LoginScreen}
+        />
+        <Stack.Screen
+          options={{
+            headerShown: false,
+          }}
           name="Registration"
           component={RegistrationScreen}
         />
@@ -29,8 +38,8 @@ export const useRoute = (isAuth) => {
           options={{
             headerShown: false,
           }}
-          name="Login"
-          component={LoginScreen}
+          name="Home"
+          component={Home}
         />
       </Stack.Navigator>
     );
@@ -43,15 +52,15 @@ export const useRoute = (isAuth) => {
           width: 10,
         },
         tabBarStyle: {
-          position: "absolute",
+          // position: "absolute",
           height: 83,
         },
         tabBarActiveBackgroundColor: "#FF6C00",
       }}
     >
       <Tab.Screen
-        name="Posts"
-        component={PostsScreen}
+        name="Default"
+        component={DefaulScreen}
         options={{
           tabBarIcon: ({ focused, color, size }) => {
             if (focused) {
@@ -72,6 +81,7 @@ export const useRoute = (isAuth) => {
             }
             return <AntDesign name="plus" size={size} color={color} />;
           },
+          headerShown: false,
         }}
       />
       <Tab.Screen

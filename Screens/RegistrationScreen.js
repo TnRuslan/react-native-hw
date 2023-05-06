@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { signUp } from "../redux/auth/authOperations";
 import * as ImagePicker from "expo-image-picker";
 import {
   KeyboardAvoidingView,
@@ -19,6 +21,7 @@ import {
   Roboto_500Medium,
 } from "@expo-google-fonts/roboto";
 import { StyledButton } from "../assets/components/Button";
+import { auth } from "../firebase/config";
 
 export const RegistrationScreen = ({ navigation }) => {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
@@ -26,9 +29,12 @@ export const RegistrationScreen = ({ navigation }) => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
 
+  const dispatch = useDispatch();
+
   const loginHandler = (text) => setLogin(text);
   const emailHandler = (text) => setEmail(text);
   const passwordHandler = (text) => setPassword(text);
+
   let [fontsLoaded] = useFonts({
     Roboto_400Regular,
     Roboto_500Medium,
@@ -40,11 +46,7 @@ export const RegistrationScreen = ({ navigation }) => {
 
   const onSubmit = () => {
     Keyboard.dismiss();
-    console.log(`login: ${login}; email: ${email} ; password: ${password}`);
-    setLogin("");
-    setEmail("");
-    setPassword("");
-    navigation.navigate("Home");
+    dispatch(signUp(auth, email, password, login));
   };
 
   const pickImageAsync = async () => {

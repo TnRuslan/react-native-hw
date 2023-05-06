@@ -6,33 +6,38 @@ import {
   FlatList,
   Image,
 } from "react-native";
-import { Feather } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
+import { collection, onSnapshot } from "firebase/firestore";
+import { storage, db } from "../../firebase/config";
 //icom import
 import { EvilIcons } from "@expo/vector-icons";
 import { SimpleLineIcons } from "@expo/vector-icons";
 
 export const PostsScreen = ({ navigation, route }) => {
   const [posts, setPosts] = useState([]);
-  console.log(posts);
+
+  const getAllPosts = async () => {
+    const snapshot = onSnapshot(collection(db, "posts"), (doc) => {
+      setPosts(doc.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    });
+  };
+
   useEffect(() => {
-    if (route.params) {
-      setPosts((prevState) => [...prevState, route.params]);
-    }
-  }, [route.params]);
+    getAllPosts();
+  }, []);
 
   const renderItem = ({ item }) => {
     return (
       <View style={styles.item}>
-        <Image source={{ uri: item.photo }} style={styles.image} />
+        <Image source={{ uri: item.photoUrl }} style={styles.image} />
         <Text style={styles.postTitle}>{item.postTitle}</Text>
         <View style={styles.postInfo}>
           <TouchableOpacity
             style={styles.commentWrp}
-            onPress={() => navigation.navigate("CommentsScreen")}
+            onPress={() => navigation.navigate("CommentsScreen", item)}
           >
             <EvilIcons name="comment" size={18} color="#BDBDBD" />
-            <Text>0</Text>
+            <Text>comments</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.locationWrp}
@@ -50,21 +55,11 @@ export const PostsScreen = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
-      {/* <View style={styles.header}>
-        <Text style={styles.headerText}>Posts</Text>
-        <TouchableOpacity
-          style={styles.logOutIcon}
-          onPress={() => navigation.navigate("Login")}
-        >
-          <Feather name="log-out" size={24} color="#BDBDBD" />
-        </TouchableOpacity>
-      </View> */}
-
       <FlatList
         style={styles.itemContainer}
         data={posts}
         renderItem={renderItem}
-        keyExtractor={(item, index) => index.toString()}
+        keyExtractor={(item) => item.id}
       />
     </View>
   );

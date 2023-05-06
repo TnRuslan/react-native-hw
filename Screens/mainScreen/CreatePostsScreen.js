@@ -9,21 +9,27 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
+  ScrollView,
 } from "react-native";
-import { Camera, CameraType } from "expo-camera";
+import { Camera } from "expo-camera";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useState, useEffect } from "react";
+
 import * as MediaLibrary from "expo-media-library";
 import * as Location from "expo-location";
 
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { storage, db } from "../../firebase/config";
+import { collection, addDoc } from "firebase/firestore";
+import { useSelector } from "react-redux";
+
 export const CreatePostsScreen = ({ navigation }) => {
-  const [hasPermission, setHasPermission] = useState(null);
+  const { userId, userName } = useSelector((state) => state.auth);
   const [camera, setCamera] = useState(null);
   const [photo, setPhoto] = useState("");
   const [postTitle, setPostTitle] = useState("");
   const [place, setPlace] = useState("");
   const [location, setLocation] = useState(null);
-  const [errorMsg, setErrorMsg] = useState(null);
 
   const titleHandler = (text) => setPostTitle(text);
   const placeHandler = (text) => setPlace(text);
@@ -33,12 +39,12 @@ export const CreatePostsScreen = ({ navigation }) => {
       const { status } = await Camera.getCameraPermissionsAsync();
       await MediaLibrary.requestPermissionsAsync();
 
-      setHasPermission(status === "granted");
+      console.log(status === "granted");
 
       let { status: respons } =
         await Location.requestForegroundPermissionsAsync();
       if (respons !== "granted") {
-        setErrorMsg("Permission to access location was denied");
+        console.log("Permission to access location was denied");
         return;
       }
     })();
@@ -51,8 +57,35 @@ export const CreatePostsScreen = ({ navigation }) => {
     setLocation(location.coords);
   };
 
-  const postPhoto = () => {
-    navigation.navigate("PostsScreen", { photo, postTitle, place, location });
+  const uploadPhoto = async () => {
+    const respons = await fetch(photo);
+    const file = await respons.blob();
+    const postId = Date.now().toString();
+
+    const storageRef = ref(storage, `posts/${postId}`);
+
+    const uploaded = await uploadBytes(storageRef, file);
+
+    const photoUrl = await getDownloadURL(uploaded.ref);
+
+    return photoUrl;
+  };
+
+  const uploadPost = async () => {
+    const photoUrl = await uploadPhoto();
+    const post = { photoUrl, postTitle, place, location, userId, userName };
+
+    try {
+      const docRef = await addDoc(collection(db, "posts"), post);
+      console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
+  };
+
+  const postPhoto = async () => {
+    uploadPost();
+    navigation.navigate("PostsScreen");
     setPhoto("");
     setPostTitle("");
     setPlace("");
@@ -63,7 +96,7 @@ export const CreatePostsScreen = ({ navigation }) => {
       <KeyboardAvoidingView
         behavior={Platform.OS == "ios" ? "padding" : "height"}
       >
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
           <View style={styles.header}>
             <Text style={styles.headerText}>Create Post</Text>
           </View>
@@ -97,11 +130,15 @@ export const CreatePostsScreen = ({ navigation }) => {
               onChangeText={placeHandler}
             />
 
-            <TouchableOpacity style={styles.publishBtn} onPress={postPhoto}>
+            <TouchableOpacity
+              style={styles.publishBtn}
+              onPress={postPhoto}
+              // onPress={uploadPhoto}
+            >
               <Text style={styles.btnText}>Publish</Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </ScrollView>
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );
@@ -173,6 +210,7 @@ const styles = StyleSheet.create({
     height: 51,
     borderRadius: 50,
     marginTop: 32,
+    marginBottom: 100,
     backgroundColor: "#FF6C00",
     alignItems: "center",
     justifyContent: "center",

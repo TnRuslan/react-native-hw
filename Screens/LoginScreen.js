@@ -14,6 +14,9 @@ import {
   Roboto_500Medium,
 } from "@expo-google-fonts/roboto";
 import { StyledButton } from "../assets/components/Button";
+import { auth } from "../firebase/config";
+import { signIn } from "../redux/auth/authOperations";
+import { useDispatch } from "react-redux";
 
 export const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState();
@@ -21,13 +24,13 @@ export const LoginScreen = ({ navigation }) => {
 
   const emailHandler = (text) => setEmail(text);
   const passwordHandler = (text) => setPassword(text);
+  const dispatch = useDispatch();
 
   const onSubmit = () => {
     Keyboard.dismiss();
-    console.log(`email: ${email} ; password: ${password}`);
-    setEmail("");
-    setPassword("");
-    navigation.navigate("Home");
+    dispatch(signIn(auth, email, password));
+    // setEmail("");
+    // setPassword("");
   };
 
   let [fontsLoaded] = useFonts({
